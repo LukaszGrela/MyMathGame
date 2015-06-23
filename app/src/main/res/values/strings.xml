@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">My Math Game</string>
+    <string name="action_settings">Settings</string>
+    <string name="main_menu_choose_game_type">Choose type of game</string>
+    <string name="main_menu_range">Number range 0-100</string>
+
+    <string name="game_type_title_mul">Multiplication</string>
+    <string name="game_type_title_div">Division</string>
+    <string name="game_type_title_add">Addition</string>
+    <string name="game_type_title_sub">Subtraction</string>
+
+    <string name="game_type_label_sub">−</string>
+    <string name="game_type_label_mul">×</string>
+    <string name="game_type_label_div">÷</string>
+    <string name="game_type_label_add">+</string>
+</resources>
