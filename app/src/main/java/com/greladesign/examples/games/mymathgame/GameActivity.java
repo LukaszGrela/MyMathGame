@@ -24,6 +24,7 @@ public class GameActivity extends Activity {
     private static final String TAG = "GameActivity";
 
     private EnumSet<Operation> mGameId;
+    private boolean mHadAnotherGo = false;
     private int mGameRange;
     private Random mRandom;
     private TextView mTvOperation;
@@ -36,16 +37,25 @@ public class GameActivity extends Activity {
             int answer = Integer.parseInt(((Button) v).getText().toString());
             int a = Integer.parseInt(mTvArgument1.getText().toString());
             int b = Integer.parseInt(mTvArgument2.getText().toString());
-
+            boolean anotherGo = false;
             if (isCorrect(a, b, answer)) {
                 Toast.makeText(getBaseContext(), "Very Good!",
                         Toast.LENGTH_LONG).show();
+                mHadAnotherGo = false;
             } else {
-                Toast.makeText(getBaseContext(), "Incorrect!",
-                        Toast.LENGTH_LONG).show();
+                if(mHadAnotherGo == false) {
+                    mHadAnotherGo = true;
+                    anotherGo = (true);
+                    Toast.makeText(getBaseContext(), "Not right, have another go",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    mHadAnotherGo = false;
+                    Toast.makeText(getBaseContext(), "Incorrect!",
+                            Toast.LENGTH_LONG).show();
+                }
             }
             //next question
-            prepareQuestion();
+            prepareQuestion(anotherGo);
         }
     };
     private TextView mTvTitle;
@@ -63,7 +73,7 @@ public class GameActivity extends Activity {
         mGameId = Operation.fromArray(gameIdArray);
 
         prepareGame();
-        prepareQuestion();
+        prepareQuestion(false);
 
 
     }
@@ -90,29 +100,42 @@ public class GameActivity extends Activity {
         }
     }
 
-    private void prepareQuestion() {
+    private void prepareQuestion(boolean anotherGo) {
+        if(anotherGo){
+            //hide one of incorrect buttonsint
+            int index = mRandom.nextInt(3);
+            index++;//avoid 0 - here it is the correct answer
+            mAnswers.get(index).setVisibility(View.GONE);
+        } else {
 
-        int arg1 = mRandom.nextInt(mGameRange);
-        arg1++;//avoid 0
-        int arg2 = mRandom.nextInt(mGameRange);
-        arg2++;//avoid 0
+            int arg1 = mRandom.nextInt(mGameRange);
+            arg1++;//avoid 0
+            int arg2 = mRandom.nextInt(mGameRange);
+            arg2++;//avoid 0
 
-        mTvArgument1.setText("" + arg1);
-        mTvArgument2.setText("" + arg2);
+            mTvArgument1.setText("" + arg1);
+            mTvArgument2.setText("" + arg2);
 
-        //shuffle
-        Collections.shuffle(mAnswers);
-        //prepare answers
-        final int answer = calculateAnswer(arg1, arg2);
-        //correct
-        mAnswers.get(0).setText("" + answer);
-        //off by one +
-        mAnswers.get(1).setText("" + (answer + 1));
-        //off by one -
-        mAnswers.get(2).setText("" + (answer - 1));
-        int random = mRandom.nextBoolean() ? 5 : -5;
-        //off by random
-        mAnswers.get(3).setText("" + (answer + random));
+            //shuffle
+            Collections.shuffle(mAnswers);
+            //prepare answers
+            final int answer = calculateAnswer(arg1, arg2);
+            //correct
+            mAnswers.get(0).setText("" + answer);
+            //off by one +
+            mAnswers.get(1).setText("" + (answer + 1));
+            //off by one -
+            mAnswers.get(2).setText("" + (answer - 1));
+            int random = mRandom.nextBoolean() ? 5 : -5;
+            //off by random
+            mAnswers.get(3).setText("" + (answer + random));
+
+            for (Button btn : mAnswers) {
+                if(btn.getVisibility() == View.GONE) {
+                    btn.setVisibility(View.VISIBLE);
+                }
+            }
+        }
     }
 
     private boolean isCorrect(int a, int b, int answer) {
