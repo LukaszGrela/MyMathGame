@@ -18,10 +18,11 @@ import java.util.Random;
 
 
 /**
- * Created by lukasz on 2015-06-22.
+ * Created by Łukasz 'Severiaan' Grela on 2015-06-22.
  */
 public class GameActivity extends Activity {
-    private static final String TAG = "GameActivity";
+
+    //private static final String TAG = "GameActivity";
 
     private EnumSet<Operation> mGameId;
     private boolean mHadAnotherGo = false;
@@ -43,11 +44,12 @@ public class GameActivity extends Activity {
                         Toast.LENGTH_LONG).show();
                 mHadAnotherGo = false;
             } else {
-                if(mHadAnotherGo == false) {
+                if(!mHadAnotherGo) {
                     mHadAnotherGo = true;
                     anotherGo = (true);
                     Toast.makeText(getBaseContext(), "Not right, have another go",
                             Toast.LENGTH_LONG).show();
+                    v.setVisibility(View.INVISIBLE);//hide incorrect answer
                 } else {
                     mHadAnotherGo = false;
                     Toast.makeText(getBaseContext(), "Incorrect!",
@@ -102,10 +104,10 @@ public class GameActivity extends Activity {
 
     private void prepareQuestion(boolean anotherGo) {
         if(anotherGo){
-            //hide one of incorrect buttonsint
-            int index = mRandom.nextInt(3);
-            index++;//avoid 0 - here it is the correct answer
-            mAnswers.get(index).setVisibility(View.GONE);
+            //hide one of incorrect button
+            //int index = mRandom.nextInt(3);
+            //index++;//avoid 0 - here it is the correct answer
+            //mAnswers.get(index).setVisibility(View.INVISIBLE);
         } else {
 
             int arg1 = mRandom.nextInt(mGameRange);
@@ -131,7 +133,7 @@ public class GameActivity extends Activity {
             mAnswers.get(3).setText("" + (answer + random));
 
             for (Button btn : mAnswers) {
-                if(btn.getVisibility() == View.GONE) {
+                if(btn.getVisibility() == View.INVISIBLE) {
                     btn.setVisibility(View.VISIBLE);
                 }
             }
@@ -167,7 +169,7 @@ public class GameActivity extends Activity {
         Button mBtnAnswer3 = (Button) findViewById(R.id.btnAnswer3);
         Button mBtnAnswer4 = (Button) findViewById(R.id.btnAnswer4);
 
-        mAnswers = new ArrayList<Button>();
+        mAnswers = new ArrayList<>();
         mAnswers.add(mBtnAnswer1);
         mAnswers.add(mBtnAnswer2);
         mAnswers.add(mBtnAnswer3);
