@@ -43,6 +43,8 @@ public class GameActivity extends Activity {
                 Toast.makeText(getBaseContext(), "Very Good!",
                         Toast.LENGTH_LONG).show();
                 mHadAnotherGo = false;
+                //
+                mCorrectCount++;
             } else {
                 if(!mHadAnotherGo) {
                     mHadAnotherGo = true;
@@ -54,13 +56,25 @@ public class GameActivity extends Activity {
                     mHadAnotherGo = false;
                     Toast.makeText(getBaseContext(), "Incorrect!",
                             Toast.LENGTH_LONG).show();
+                    mIncorrectCount++;
                 }
             }
             //next question
             prepareQuestion(anotherGo);
+            updateStats();
         }
     };
+
+    private void updateStats() {
+        mTvIncorrect.setText(mIncorrectCount + "");
+        mTvCorrect.setText(mCorrectCount + "");
+    }
+
     private TextView mTvTitle;
+    private TextView mTvIncorrect;
+    private TextView mTvCorrect;
+    private int mCorrectCount = 0;
+    private int mIncorrectCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,48 +91,59 @@ public class GameActivity extends Activity {
         prepareGame();
         prepareQuestion(false);
 
+        updateStats();
 
     }
 
     private void prepareGame() {
+        //reset counters
+        mCorrectCount = 0;
+        mIncorrectCount = 0;
+
         long seed = 1979L;
         mRandom = new Random(seed);
 
         if (mGameId.contains(Operation.ADD)) {
-            mTvOperation.setText("+");
+            mTvOperation.setText(getResources().getString(R.string.game_type_label_add));
             mTvTitle.setText(getResources().getString(R.string.game_type_title_add));
         }
         if (mGameId.contains(Operation.SUBSTRACT)) {
-            mTvOperation.setText("−");
+            mTvOperation.setText(getResources().getString(R.string.game_type_label_sub));
             mTvTitle.setText(getResources().getString(R.string.game_type_title_sub));
         }
         if (mGameId.contains(Operation.MULTIPLY)) {
-            mTvOperation.setText("×");
+            mTvOperation.setText(getResources().getString(R.string.game_type_label_mul));
             mTvTitle.setText(getResources().getString(R.string.game_type_title_mul));
         }
         if (mGameId.contains(Operation.DIVIDE)) {
-            mTvOperation.setText("÷");
+            mTvOperation.setText(getResources().getString(R.string.game_type_label_div));
             mTvTitle.setText(getResources().getString(R.string.game_type_title_div));
         }
     }
 
     private void prepareQuestion(boolean anotherGo) {
-        if(anotherGo){
-            //hide one of incorrect button
-            //int index = mRandom.nextInt(3);
-            //index++;//avoid 0 - here it is the correct answer
-            //mAnswers.get(index).setVisibility(View.INVISIBLE);
-        } else {
+        if(!anotherGo) {
 
-            int arg1 = mRandom.nextInt(mGameRange);
-            arg1++;//avoid 0
-            int arg2 = mRandom.nextInt(mGameRange);
-            arg2++;//avoid 0
+            int arg1;
+            int arg2;
+            if(mGameId.contains(Operation.ADD)) {
+                //we need to make sure sum will be within range
+                final int sum = mRandom.nextInt(mGameRange) + 1;//more than 0
+                arg1 = mRandom.nextInt(sum);
+                arg1++;//avoid 0
+                arg2 = sum - arg1;
+            } else {
+                arg1 = mRandom.nextInt(mGameRange);
+                arg1++;//avoid 0
+                arg2 = mRandom.nextInt(mGameRange);
+                arg2++;//avoid 0
+            }
+
 
             mTvArgument1.setText("" + arg1);
             mTvArgument2.setText("" + arg2);
 
-            //shuffle
+            //shuffle answer buttons
             Collections.shuffle(mAnswers);
             //prepare answers
             final int answer = calculateAnswer(arg1, arg2);
@@ -128,8 +153,8 @@ public class GameActivity extends Activity {
             mAnswers.get(1).setText("" + (answer + 1));
             //off by one -
             mAnswers.get(2).setText("" + (answer - 1));
+            //off by randomly picked -5 or 5
             int random = mRandom.nextBoolean() ? 5 : -5;
-            //off by random
             mAnswers.get(3).setText("" + (answer + random));
 
             for (Button btn : mAnswers) {
@@ -163,6 +188,9 @@ public class GameActivity extends Activity {
         mTvArgument1 = (TextView) findViewById(R.id.tvArgument1);
         mTvArgument2 = (TextView) findViewById(R.id.tvArgument2);
         mTvTitle = (TextView) findViewById(R.id.tvTitle);
+
+        mTvCorrect = (TextView) findViewById(R.id.tvCorrect);
+        mTvIncorrect = (TextView) findViewById(R.id.tvIncorrect);
 
         Button mBtnAnswer1 = (Button) findViewById(R.id.btnAnswer1);
         Button mBtnAnswer2 = (Button) findViewById(R.id.btnAnswer2);
