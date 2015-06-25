@@ -46,7 +46,7 @@ public class GameActivity extends Activity {
                 //
                 mCorrectCount++;
             } else {
-                if(!mHadAnotherGo) {
+                if (!mHadAnotherGo) {
                     mHadAnotherGo = true;
                     anotherGo = (true);
                     Toast.makeText(getBaseContext(), "Not right, have another go",
@@ -122,16 +122,34 @@ public class GameActivity extends Activity {
     }
 
     private void prepareQuestion(boolean anotherGo) {
-        if(!anotherGo) {
+        if (!anotherGo) {
 
             int arg1;
             int arg2;
-            if(mGameId.contains(Operation.ADD)) {
+            if (mGameId.contains(Operation.ADD)) {
                 //we need to make sure sum will be within range
                 final int sum = mRandom.nextInt(mGameRange) + 1;//more than 0
                 arg1 = mRandom.nextInt(sum);
                 arg1++;//avoid 0
                 arg2 = sum - arg1;
+            } else if (mGameId.contains(Operation.SUBSTRACT)) {
+                final int diff = mRandom.nextInt(mGameRange);
+                arg1 = mRandom.nextInt(mGameRange - diff) + diff;
+                arg2 = arg1 - diff;
+            } else if (mGameId.contains(Operation.DIVIDE)) {
+                final int a = mRandom.nextInt(mGameRange);
+                int b = mRandom.nextInt(mGameRange);
+                b++;//avoid 0 (division by 0 is illegal:)
+
+                final int mul = a * b;
+
+                arg1 = mul;
+                arg2 = mRandom.nextBoolean() ? a : b;
+                if(arg1 == 0 && arg2 == 0) {
+                    arg2 = mRandom.nextInt(mGameRange);
+                    arg2++;//avoid 0 (division by 0 is illegal:)
+                }
+
             } else {
                 arg1 = mRandom.nextInt(mGameRange);
                 arg1++;//avoid 0
@@ -158,7 +176,7 @@ public class GameActivity extends Activity {
             mAnswers.get(3).setText("" + (answer + random));
 
             for (Button btn : mAnswers) {
-                if(btn.getVisibility() == View.INVISIBLE) {
+                if (btn.getVisibility() == View.INVISIBLE) {
                     btn.setVisibility(View.VISIBLE);
                 }
             }
@@ -176,8 +194,10 @@ public class GameActivity extends Activity {
             return (a - b);
         if (mGameId.contains(Operation.MULTIPLY))
             return (a * b);
-        if (mGameId.contains(Operation.DIVIDE))
+        if (mGameId.contains(Operation.DIVIDE)) {
+            if (b == 0) return -1;
             return (a / b);
+        }
 
         return -1;
     }

@@ -1,4 +1,4 @@
-package com.greladesign.example.packtpub.ljbbag.ch02;
+package com.greladesign.examples.games.mymathgame;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
