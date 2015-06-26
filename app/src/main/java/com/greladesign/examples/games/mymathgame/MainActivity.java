@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 
 import com.greladesign.examples.games.mymathgame.game.Operation;
 
@@ -36,11 +37,13 @@ public class MainActivity extends Activity {
             }
         }
     };
+    private CheckBox mCbAllowSecondTry;
 
     private void startNewGame(int range, EnumSet<Operation> operationId) {
         final Intent gameIntent = new Intent(this, GameActivity.class);
-        gameIntent.putExtra("range", range);
-        gameIntent.putExtra("operationId",Operation.toArray(operationId));
+        gameIntent.putExtra(GameActivity.INTENT_RANGE, range);
+        gameIntent.putExtra(GameActivity.INTENT_OPERATION_ID,Operation.toArray(operationId));
+        gameIntent.putExtra(GameActivity.INTENT_ALLOW_SECOND_TRY,mCbAllowSecondTry.isChecked());
         startActivity(gameIntent);
     }
 
@@ -50,8 +53,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         findViews();
-
-
     }
 
     private void findViews() {
@@ -59,6 +60,9 @@ public class MainActivity extends Activity {
         btnGameSubstraction = (Button) findViewById(R.id.btnOperationSubstract);
         btnGameMultiplication = (Button) findViewById(R.id.btnOperationMultiply);
         btnGameDivision = (Button) findViewById(R.id.btnOperationDivide);
+        //
+        mCbAllowSecondTry = (CheckBox) findViewById(R.id.cbAllowSecondTry);
+        //
         //add logic
         btnGameAddition.setOnClickListener(mSelectGameListener);
         btnGameSubstraction.setOnClickListener(mSelectGameListener);

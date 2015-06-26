@@ -21,6 +21,21 @@ import java.util.Random;
  * Created by Łukasz 'Severiaan' Grela on 2015-06-22.
  */
 public class GameActivity extends Activity {
+    //Done - add/fix range handling for each game
+    //TODO: save game state (seed, number of steps taken etc.)
+    //TODO: SquiDB statistics logging
+    //TODO: Statistics - good + 2nd attempts/bad answers
+    //TODO: Statistics - timings - duration of answer
+    //TODO: Game type selection - timed (e.g. 1,2 or 3mins)
+    //TODO: Game type selection - time-pressure, X number of question with time limit per answer (e.g. 6, 4, 2 sec)
+    //TODO: Game type selection - continous restricted by a number of mistakes (e.g. 3, 6 or 10)
+    //TODO: Game type selection - finite, restricted by a number of questions (e.g. 10, 25, 50, 75 or 100)
+    //TODO: visual make-up
+
+
+    public static final String INTENT_RANGE = "intent_range";
+    public static final String INTENT_OPERATION_ID = "intent_operationId";
+    public static final String INTENT_ALLOW_SECOND_TRY = "intent_allowSecondTry";
 
     //private static final String TAG = "GameActivity";
 
@@ -46,7 +61,7 @@ public class GameActivity extends Activity {
                 //
                 mCorrectCount++;
             } else {
-                if (!mHadAnotherGo) {
+                if (!mHadAnotherGo && mAllowSecondTry) {
                     mHadAnotherGo = true;
                     anotherGo = (true);
                     Toast.makeText(getBaseContext(), "Not right, have another go",
@@ -64,6 +79,7 @@ public class GameActivity extends Activity {
             updateStats();
         }
     };
+    private boolean mAllowSecondTry;
 
     private void updateStats() {
         mTvIncorrect.setText(mIncorrectCount + "");
@@ -81,18 +97,17 @@ public class GameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-
         findViews();
+
         final Intent intent = getIntent();
-        mGameRange = intent.getIntExtra("range", -1);
-        final int[] gameIdArray = intent.getIntArrayExtra("operationId");
+        mGameRange = intent.getIntExtra(INTENT_RANGE, -1);
+        final int[] gameIdArray = intent.getIntArrayExtra(INTENT_OPERATION_ID);
         mGameId = Operation.fromArray(gameIdArray);
+        mAllowSecondTry = intent.getBooleanExtra(INTENT_ALLOW_SECOND_TRY, false);
 
         prepareGame();
         prepareQuestion(false);
-
         updateStats();
-
     }
 
     private void prepareGame() {
