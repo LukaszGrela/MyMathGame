@@ -13,4 +13,6 @@
     <string name="game_type_label_mul">×</string>
     <string name="game_type_label_div">÷</string>
     <string name="game_type_label_add">+</string>
+    <string name="main_menu_range_button">Change</string>
+    <string name="main_menu_cb_allow_2nd_try">Allow second try</string>
 </resources>
