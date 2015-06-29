@@ -1,14 +1,15 @@
 package com.greladesign.examples.games.mymathgame;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.greladesign.examples.games.mymathgame.game.AnswerIndicator;
 import com.greladesign.examples.games.mymathgame.game.Operation;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import java.util.Random;
 /**
  * Created by Łukasz 'Severiaan' Grela on 2015-06-22.
  */
-public class GameActivity extends Activity {
+public class GameActivity extends AppCompatActivity {
     //Done - add/fix range handling for each game
     //TODO: save game state (seed, number of steps taken etc.)
     //TODO: SquiDB statistics logging
@@ -39,6 +40,9 @@ public class GameActivity extends Activity {
     public static final String INTENT_OPERATION_ID = "intent_operationId";
     public static final String INTENT_ALLOW_SECOND_TRY = "intent_allowSecondTry";
     private static final String TAG = "GameActivity";
+    private static final String GAME_ANSWER_CORRECT = "AnswerIndicator-correct";
+    private static final String GAME_ANSWER_INCORRECT = "AnswerIndicator-incorrect";
+    private static final String GAME_ANSWER_2NDTRY = "AnswerIndicator-2ndtry";
 
     //private static final String TAG = "GameActivity";
 
@@ -57,8 +61,9 @@ public class GameActivity extends Activity {
             int b = Integer.parseInt(mTvArgument2.getText().toString());
             boolean anotherGo = false;
             if (isCorrect(a, b, answer)) {
-                Toast.makeText(getBaseContext(), "Very Good!",
-                        Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getBaseContext(), "Very Good!",
+                //        Toast.LENGTH_SHORT).show();
+                showCorrectPopup();
                 mHadAnotherGo = false;
                 //
                 mCorrectCount++;
@@ -66,13 +71,15 @@ public class GameActivity extends Activity {
                 if (!mHadAnotherGo && mAllowSecondTry) {
                     mHadAnotherGo = true;
                     anotherGo = (true);
-                    Toast.makeText(getBaseContext(), "Not right, have another go",
-                            Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getBaseContext(), "Not right, have another go",
+                    //        Toast.LENGTH_SHORT).show();
+                    show2ndTryPopup();
                     v.setVisibility(View.INVISIBLE);//hide incorrect answer
                 } else {
                     mHadAnotherGo = false;
-                    Toast.makeText(getBaseContext(), "Incorrect!",
-                            Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getBaseContext(), "Incorrect!",
+                    //        Toast.LENGTH_SHORT).show();
+                    showInorrectPopup();
                     mIncorrectCount++;
                 }
             }
@@ -217,6 +224,42 @@ public class GameActivity extends Activity {
             }
         }
     }
+
+    private void showCorrectPopup(){
+
+        DialogFragment dialog = new AnswerIndicator();
+        final Bundle arguments = new Bundle();
+
+            arguments.putInt(AnswerIndicator.BUNDLE_ID_ICON_RES, R.drawable.img_answer_indicator_positive);
+            arguments.putInt(AnswerIndicator.BUNDLE_ID_MESSAGE_RES, R.string.game_indicator_correct_msg);
+            arguments.putInt(AnswerIndicator.BUNDLE_ID_TITLE_RES, R.string.game_indicator_correct_title);
+
+        dialog.setArguments(arguments);
+        dialog.show(getSupportFragmentManager(), GAME_ANSWER_CORRECT);
+    }
+    private void showInorrectPopup(){
+        DialogFragment dialog = new AnswerIndicator();
+        final Bundle arguments = new Bundle();
+
+        arguments.putInt(AnswerIndicator.BUNDLE_ID_ICON_RES, R.drawable.img_answer_indicator_negative);
+        arguments.putInt(AnswerIndicator.BUNDLE_ID_MESSAGE_RES, R.string.game_indicator_incorrect_msg);
+        arguments.putInt(AnswerIndicator.BUNDLE_ID_TITLE_RES, R.string.game_indicator_incorrect_title);
+
+        dialog.setArguments(arguments);
+        dialog.show(getSupportFragmentManager(), GAME_ANSWER_INCORRECT);
+    }
+    private void show2ndTryPopup(){
+        DialogFragment dialog = new AnswerIndicator();
+        final Bundle arguments = new Bundle();
+
+        arguments.putInt(AnswerIndicator.BUNDLE_ID_ICON_RES, R.drawable.img_answer_indicator_negative);
+        arguments.putInt(AnswerIndicator.BUNDLE_ID_MESSAGE_RES, R.string.game_indicator_2ndtry_msg);
+        arguments.putInt(AnswerIndicator.BUNDLE_ID_TITLE_RES, R.string.game_indicator_2ndtry_title);
+
+        dialog.setArguments(arguments);
+        dialog.show(getSupportFragmentManager(), GAME_ANSWER_2NDTRY);
+    }
+
 
     private boolean isCorrect(int a, int b, int answer) {
         return answer == calculateAnswer(a, b);

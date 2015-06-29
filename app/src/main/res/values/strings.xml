@@ -22,4 +22,13 @@
     <string name="game_setup_range_from">From</string>
     <string name="game_setup_range_to">To</string>
     <string name="game_setup_positive_btn">Set</string>
+
+    <!-- Game - AnswerIndicator -->
+    <string name="game_indicator_correct_title">Correct !</string>
+    <string name="game_indicator_incorrect_title">Incorrect !</string>
+    <string name="game_indicator_2ndtry_title">Not right !</string>
+
+    <string name="game_indicator_correct_msg">Well done!</string>
+    <string name="game_indicator_incorrect_msg">Don\'t give up</string>
+    <string name="game_indicator_2ndtry_msg">Try again</string>
 </resources>

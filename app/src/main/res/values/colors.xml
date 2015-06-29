@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="game_color_answer_indicator_text">#ffFFffFF</color>
+    <color name="game_color_positive">#ff02be0e</color>
+    <color name="game_color_negative">#ffbe0002</color>
+</resources>

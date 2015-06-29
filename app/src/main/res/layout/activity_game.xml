@@ -130,7 +130,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:textStyle="bold"
-        android:textColor="#ff02be0e" />
+        android:textColor="@color/game_color_positive" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -142,5 +142,5 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:textStyle="bold"
-        android:textColor="#ffbe0002" />
+        android:textColor="@color/game_color_negative" />
 </RelativeLayout>
