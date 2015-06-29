@@ -1,8 +1,10 @@
 package com.greladesign.examples.games.mymathgame;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,23 +17,41 @@ import com.greladesign.examples.games.mymathgame.game.Operation;
 import java.util.EnumSet;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity implements GameSetupDialogue.GameSetupListener{
 
 
     private static final String TAG = "MainActivity";
+    private static final String GAME_SETUP_DIALOGUE_ADD_SUB = "GameSetupDialogueAddSub";
+    private static final String GAME_SETUP_DIALOGUE_MUL_DIV = "GameSetupDialogueMulDiv";
+
+
     private Button btnGameAddition;
     private Button btnGameSubstraction;
     private Button btnGameMultiplication;
     private Button btnGameDivision;
+
+    private Range mAddSubRange;
+    private Range mMulDivRange;
+
     private View.OnClickListener mRangeSelectionListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Log.i(TAG, "Click");
+            DialogFragment dialog = new GameSetupDialogue();
+            final Bundle arguments = new Bundle();
             if (v == mChangeAddSubRange) {
                 Log.i(TAG, "Changing the adding/subtracting range");
+                arguments.putInt("lower", mAddSubRange.getLower());
+                arguments.putInt("upper", mAddSubRange.getUpper());
+                dialog.setArguments(arguments);
+                dialog.show(getSupportFragmentManager(), GAME_SETUP_DIALOGUE_ADD_SUB);
             }
             if (v == mChangeMulDivRange) {
                 Log.i(TAG, "Changing the multiply/division range");
+                arguments.putInt("lower", mMulDivRange.getLower());
+                arguments.putInt("upper", mMulDivRange.getUpper());
+                dialog.setArguments(arguments);
+                dialog.show(getSupportFragmentManager(), GAME_SETUP_DIALOGUE_MUL_DIV);
             }
         }
     };
@@ -40,31 +60,33 @@ public class MainActivity extends Activity {
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.btnOperationAdd:
-                    startNewGame(100, EnumSet.of(Operation.ADD));
+                    startNewGame(mAddSubRange, EnumSet.of(Operation.ADD));
                     break;
                 case R.id.btnOperationSubstract:
-                    startNewGame(100,EnumSet.of(Operation.SUBSTRACT));
+                    startNewGame(mAddSubRange,EnumSet.of(Operation.SUBSTRACT));
                     break;
                 case R.id.btnOperationMultiply:
-                    startNewGame(10,EnumSet.of(Operation.MULTIPLY));
+                    startNewGame(mMulDivRange,EnumSet.of(Operation.MULTIPLY));
                     break;
                 case R.id.btnOperationDivide:
-                    startNewGame(10,EnumSet.of(Operation.DIVIDE));
+                    startNewGame(mMulDivRange,EnumSet.of(Operation.DIVIDE));
                     break;
             }
         }
     };
+
     private CheckBox mCbAllowSecondTry;
     private TextView mTvAddSubRangeDescription;
     private TextView mTvMulDivRangeDescription;
     private TextView mChangeAddSubRange;
     private TextView mChangeMulDivRange;
 
-    private void startNewGame(int range, EnumSet<Operation> operationId) {
+    private void startNewGame(Range range, EnumSet<Operation> operationId) {
         final Intent gameIntent = new Intent(this, GameActivity.class);
-        gameIntent.putExtra(GameActivity.INTENT_RANGE, range);
-        gameIntent.putExtra(GameActivity.INTENT_OPERATION_ID,Operation.toArray(operationId));
-        gameIntent.putExtra(GameActivity.INTENT_ALLOW_SECOND_TRY,mCbAllowSecondTry.isChecked());
+        gameIntent.putExtra(GameActivity.INTENT_RANGE_LOWER, range.getLower());
+        gameIntent.putExtra(GameActivity.INTENT_RANGE_UPPER, range.getUpper());
+        gameIntent.putExtra(GameActivity.INTENT_OPERATION_ID, Operation.toArray(operationId));
+        gameIntent.putExtra(GameActivity.INTENT_ALLOW_SECOND_TRY, mCbAllowSecondTry.isChecked());
         startActivity(gameIntent);
     }
 
@@ -72,6 +94,10 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        mAddSubRange = new Range(0,100);
+        mMulDivRange = new Range(0,10);
 
         findViews();
     }
@@ -101,6 +127,67 @@ public class MainActivity extends Activity {
         btnGameSubstraction.setOnClickListener(mSelectGameListener);
         btnGameMultiplication.setOnClickListener(mSelectGameListener);
         btnGameDivision.setOnClickListener(mSelectGameListener);
+        //
+        updateRangeLabels();
+    }
 
+    private void updateRangeLabels() {
+        final Resources res = getResources();
+        mTvMulDivRangeDescription.setText(res.getString(R.string.main_menu_range, mMulDivRange.getLower(),mMulDivRange.getUpper()));
+        mTvAddSubRangeDescription.setText(res.getString(R.string.main_menu_range, mAddSubRange.getLower(),mAddSubRange.getUpper()));
+    }
+
+    @Override
+    public void onGameSetupModified(String tag, int from, int to) {
+        final Resources res = getResources();
+        Log.i(TAG, "Range: " + res.getString(R.string.main_menu_range, from, to));
+
+        if (tag.equals(GAME_SETUP_DIALOGUE_MUL_DIV) || tag.equals(GAME_SETUP_DIALOGUE_ADD_SUB)) {
+            if (tag.equals(GAME_SETUP_DIALOGUE_ADD_SUB)) {
+                mAddSubRange.setLower(from);
+                mAddSubRange.setUpper(to);
+            } else {
+                mMulDivRange.setLower(from);
+                mMulDivRange.setUpper(to);
+            }
+
+            updateRangeLabels();
+        }
+    }
+
+    private class Range {
+
+        private int mLower;
+        private int mUpper;
+
+        public Range(int lower, int upper) {
+            if(lower > upper) {
+                throw new IllegalArgumentException("lower must be less than or equal to upper");
+            }
+            mLower = lower;
+            mUpper = upper;
+        }
+
+        public int getLower() {
+            return mLower;
+        }
+
+        public int getUpper() {
+            return mUpper;
+        }
+
+        public void setLower(int lower) {
+            if(lower > getUpper()) {
+                throw new IllegalArgumentException("lower must be less than or equal to upper");
+            }
+            mLower = lower;
+        }
+
+        public void setUpper(int upper) {
+            if(upper <= getLower()) {
+                throw new IllegalArgumentException("upper must be greater than lower");
+            }
+            mUpper = upper;
+        }
     }
 }

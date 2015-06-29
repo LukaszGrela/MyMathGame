@@ -3,6 +3,7 @@ package com.greladesign.examples.games.mymathgame;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -33,19 +34,20 @@ public class GameActivity extends Activity {
     //TODO: visual make-up
 
 
-    public static final String INTENT_RANGE = "intent_range";
+    public static final String INTENT_RANGE_LOWER = "intent_range_lower";
+    public static final String INTENT_RANGE_UPPER = "intent_range_upper";
     public static final String INTENT_OPERATION_ID = "intent_operationId";
     public static final String INTENT_ALLOW_SECOND_TRY = "intent_allowSecondTry";
+    private static final String TAG = "GameActivity";
 
     //private static final String TAG = "GameActivity";
 
-    private EnumSet<Operation> mGameId;
-    private boolean mHadAnotherGo = false;
-    private int mGameRange;
-    private Random mRandom;
     private TextView mTvOperation;
     private TextView mTvArgument1;
     private TextView mTvArgument2;
+    private TextView mTvTitle;
+    private TextView mTvIncorrect;
+    private TextView mTvCorrect;
     private List<Button> mAnswers;
     private View.OnClickListener mAnswerClickedListener = new View.OnClickListener() {
         @Override
@@ -56,7 +58,7 @@ public class GameActivity extends Activity {
             boolean anotherGo = false;
             if (isCorrect(a, b, answer)) {
                 Toast.makeText(getBaseContext(), "Very Good!",
-                        Toast.LENGTH_LONG).show();
+                        Toast.LENGTH_SHORT).show();
                 mHadAnotherGo = false;
                 //
                 mCorrectCount++;
@@ -65,12 +67,12 @@ public class GameActivity extends Activity {
                     mHadAnotherGo = true;
                     anotherGo = (true);
                     Toast.makeText(getBaseContext(), "Not right, have another go",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                     v.setVisibility(View.INVISIBLE);//hide incorrect answer
                 } else {
                     mHadAnotherGo = false;
                     Toast.makeText(getBaseContext(), "Incorrect!",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                     mIncorrectCount++;
                 }
             }
@@ -79,18 +81,22 @@ public class GameActivity extends Activity {
             updateStats();
         }
     };
-    private boolean mAllowSecondTry;
 
     private void updateStats() {
         mTvIncorrect.setText(mIncorrectCount + "");
         mTvCorrect.setText(mCorrectCount + "");
     }
 
-    private TextView mTvTitle;
-    private TextView mTvIncorrect;
-    private TextView mTvCorrect;
+
+    private boolean mAllowSecondTry;
     private int mCorrectCount = 0;
     private int mIncorrectCount = 0;
+    private int mGameRangeDifference;
+    private int mGameRangeLower;
+    private int mGameRangeUpper;
+    private EnumSet<Operation> mGameId;
+    private boolean mHadAnotherGo = false;
+    private Random mRandom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +106,12 @@ public class GameActivity extends Activity {
         findViews();
 
         final Intent intent = getIntent();
-        mGameRange = intent.getIntExtra(INTENT_RANGE, -1);
+        mGameRangeLower = intent.getIntExtra(INTENT_RANGE_LOWER, -1);
+        Log.i(TAG, "Lower" + mGameRangeLower);
+        mGameRangeUpper = intent.getIntExtra(INTENT_RANGE_UPPER, -1);
+        Log.i(TAG, "Upper" + mGameRangeUpper);
+        mGameRangeDifference = mGameRangeUpper - mGameRangeLower;
+        Log.i(TAG, "Difference" + mGameRangeDifference);
         final int[] gameIdArray = intent.getIntArrayExtra(INTENT_OPERATION_ID);
         mGameId = Operation.fromArray(gameIdArray);
         mAllowSecondTry = intent.getBooleanExtra(INTENT_ALLOW_SECOND_TRY, false);
@@ -143,17 +154,22 @@ public class GameActivity extends Activity {
             int arg2;
             if (mGameId.contains(Operation.ADD)) {
                 //we need to make sure sum will be within range
-                final int sum = mRandom.nextInt(mGameRange) + 1;//more than 0
+                int sum = mRandom.nextInt(mGameRangeDifference) + mGameRangeLower;
+                if (sum == 0) sum++;//more than 0
+                Log.i(TAG, "Chosen sum:"+sum);
                 arg1 = mRandom.nextInt(sum);
                 arg1++;//avoid 0
                 arg2 = sum - arg1;
             } else if (mGameId.contains(Operation.SUBSTRACT)) {
-                final int diff = mRandom.nextInt(mGameRange);
-                arg1 = mRandom.nextInt(mGameRange - diff) + diff;
+                int diff = mRandom.nextInt(mGameRangeDifference) + mGameRangeLower;
+                if (diff == 0) diff++;//more than 0
+                Log.i(TAG, "Chosen diff:"+diff);
+                arg1 = mRandom.nextInt(mGameRangeUpper - diff) + diff;
                 arg2 = arg1 - diff;
             } else if (mGameId.contains(Operation.DIVIDE)) {
-                final int a = mRandom.nextInt(mGameRange);
-                int b = mRandom.nextInt(mGameRange);
+
+                final int a = mRandom.nextInt(mGameRangeUpper);
+                int b = mRandom.nextInt(mGameRangeUpper);
                 b++;//avoid 0 (division by 0 is illegal:)
 
                 final int mul = a * b;
@@ -161,16 +177,18 @@ public class GameActivity extends Activity {
                 arg1 = mul;
                 arg2 = mRandom.nextBoolean() ? a : b;
                 if(arg1 == 0 && arg2 == 0) {
-                    arg2 = mRandom.nextInt(mGameRange);
+                    arg2 = mRandom.nextInt(mGameRangeUpper);
                     arg2++;//avoid 0 (division by 0 is illegal:)
                 }
 
             } else {
-                arg1 = mRandom.nextInt(mGameRange);
-                arg1++;//avoid 0
-                arg2 = mRandom.nextInt(mGameRange);
-                arg2++;//avoid 0
+                arg1 = mRandom.nextInt(mGameRangeDifference) + mGameRangeLower;
+                if (arg1 == 0) arg1++;//avoid 0
+                arg2 = mRandom.nextInt(mGameRangeDifference) + mGameRangeLower;
+                if (arg2 == 0) arg2++;//avoid 0
             }
+            Log.i(TAG, "arg1:"+arg1);
+            Log.i(TAG, "arg2:"+arg2);
 
 
             mTvArgument1.setText("" + arg1);

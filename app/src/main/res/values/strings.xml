@@ -2,7 +2,7 @@
     <string name="app_name">My Math Game</string>
     <string name="action_settings">Settings</string>
     <string name="main_menu_choose_game_type">Choose type of game</string>
-    <string name="main_menu_range">Number range 0-100</string>
+    <string name="main_menu_range">Number range %1$d-%2$d</string>
 
     <string name="game_type_title_mul">Multiplication</string>
     <string name="game_type_title_div">Division</string>
@@ -15,4 +15,11 @@
     <string name="game_type_label_add">+</string>
     <string name="main_menu_range_button">Change</string>
     <string name="main_menu_cb_allow_2nd_try">Allow second try</string>
+
+    <!-- Game Setup -->
+    <string name="game_setup_title">Game Setup</string>
+    <string name="game_setup_range_title">Set range</string>
+    <string name="game_setup_range_from">From</string>
+    <string name="game_setup_range_to">To</string>
+    <string name="game_setup_positive_btn">Set</string>
 </resources>
