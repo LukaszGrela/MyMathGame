@@ -167,18 +167,20 @@ public class GameActivity extends Activity {
                 arg1 = mRandom.nextInt(mGameRangeUpper - diff) + diff;
                 arg2 = arg1 - diff;
             } else if (mGameId.contains(Operation.DIVIDE)) {
-
-                final int a = mRandom.nextInt(mGameRangeUpper);
-                int b = mRandom.nextInt(mGameRangeUpper);
-                b++;//avoid 0 (division by 0 is illegal:)
-
+                final int a = mRandom.nextInt(mGameRangeDifference) + mGameRangeLower;
+                int b = mRandom.nextInt(mGameRangeDifference) + mGameRangeLower;
+                if (b == 0) b++;//avoid 0 (division by 0 is illegal:)
+                //
                 final int mul = a * b;
-
+                Log.i(TAG, "a:"+a);
+                Log.i(TAG, "b:"+b);
+                Log.i(TAG, "Chosen mul:"+mul);
+                //
                 arg1 = mul;
                 arg2 = mRandom.nextBoolean() ? a : b;
                 if(arg1 == 0 && arg2 == 0) {
-                    arg2 = mRandom.nextInt(mGameRangeUpper);
-                    arg2++;//avoid 0 (division by 0 is illegal:)
+                    arg2 = mRandom.nextInt(mGameRangeDifference) + mGameRangeLower;
+                    if (arg2 == 0) arg2++;//avoid 0 (division by 0 is illegal:)
                 }
 
             } else {
