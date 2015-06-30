@@ -233,6 +233,7 @@ public class GameActivity extends AppCompatActivity {
             arguments.putInt(AnswerIndicator.BUNDLE_ID_ICON_RES, R.drawable.img_answer_indicator_positive);
             arguments.putInt(AnswerIndicator.BUNDLE_ID_MESSAGE_RES, R.string.game_indicator_correct_msg);
             arguments.putInt(AnswerIndicator.BUNDLE_ID_TITLE_RES, R.string.game_indicator_correct_title);
+            arguments.putInt(AnswerIndicator.BUNDLE_ID_BACKGROUND_RES, R.color.game_color_positive);
 
         dialog.setArguments(arguments);
         dialog.show(getSupportFragmentManager(), GAME_ANSWER_CORRECT);
@@ -244,6 +245,7 @@ public class GameActivity extends AppCompatActivity {
         arguments.putInt(AnswerIndicator.BUNDLE_ID_ICON_RES, R.drawable.img_answer_indicator_negative);
         arguments.putInt(AnswerIndicator.BUNDLE_ID_MESSAGE_RES, R.string.game_indicator_incorrect_msg);
         arguments.putInt(AnswerIndicator.BUNDLE_ID_TITLE_RES, R.string.game_indicator_incorrect_title);
+        arguments.putInt(AnswerIndicator.BUNDLE_ID_BACKGROUND_RES, R.color.game_color_negative);
 
         dialog.setArguments(arguments);
         dialog.show(getSupportFragmentManager(), GAME_ANSWER_INCORRECT);
@@ -255,6 +257,7 @@ public class GameActivity extends AppCompatActivity {
         arguments.putInt(AnswerIndicator.BUNDLE_ID_ICON_RES, R.drawable.img_answer_indicator_negative);
         arguments.putInt(AnswerIndicator.BUNDLE_ID_MESSAGE_RES, R.string.game_indicator_2ndtry_msg);
         arguments.putInt(AnswerIndicator.BUNDLE_ID_TITLE_RES, R.string.game_indicator_2ndtry_title);
+        arguments.putInt(AnswerIndicator.BUNDLE_ID_BACKGROUND_RES, R.color.game_color_neutral);
 
         dialog.setArguments(arguments);
         dialog.show(getSupportFragmentManager(), GAME_ANSWER_2NDTRY);

@@ -3,4 +3,5 @@
     <color name="game_color_answer_indicator_text">#ffFFffFF</color>
     <color name="game_color_positive">#ff02be0e</color>
     <color name="game_color_negative">#ffbe0002</color>
+    <color name="game_color_neutral">#0066be</color>
 </resources>

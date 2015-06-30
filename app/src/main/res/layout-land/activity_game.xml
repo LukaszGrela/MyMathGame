@@ -3,116 +3,125 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Empty layout (0x0 dp) centered horizontally -->
+    <View android:id="@+id/dummy"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"/>
+
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_above="@+id/llArguments"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginBottom="@dimen/active_game_title_bottom_margin"
         android:text="Multiplication"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="30sp" />
 
     <LinearLayout
+        android:id="@+id/llArguments"
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="0dp"
-        android:layout_above="@+id/tvEquals"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_above="@+id/tvEquals"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/active_game_arguments_layout_bottom_margin">
 
         <TextView
             android:id="@+id/tvArgument1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="99"
+            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:text="99"
-            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="50sp" />
 
         <TextView
             android:id="@+id/tvOperation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="×"
+            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:text="×"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="40sp" />
-
+            android:textSize="40sp"
+            android:layout_marginLeft="@dimen/active_game_operation_margin_left"
+            android:layout_marginRight="@dimen/active_game_operation_margin_right" />
         <TextView
             android:id="@+id/tvArgument2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="99"
+            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:text="99"
-            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="50sp" />
     </LinearLayout>
-
     <TextView
         android:id="@+id/tvEquals"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerInParent="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:text="="
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="="
+        android:layout_below="@id/dummy"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/active_game_equals_margin_top"
+        android:layout_marginLeft="@dimen/active_game_equals_margin_left"
+        android:layout_marginRight="@dimen/active_game_equals_margin_right"
         android:textSize="50sp" />
-
     <LinearLayout
         android:id="@+id/llOuter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvEquals"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_below="@+id/tvEquals"
+        android:layout_marginTop="@dimen/active_game_outer_layout_margin_top"
         android:orientation="horizontal">
 
 
         <Button
             android:id="@+id/btnAnswer1"
-            android:layout_width="120dp"
+            android:layout_width="@dimen/active_game_btn_answer1_width"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="@dimen/active_game_btn_answer1_margin_right"
             android:text="10000"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+			/>
 
         <Button
             android:id="@+id/btnAnswer2"
-            android:layout_width="120dp"
+            android:layout_width="@dimen/active_game_btn_answer2_width"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="@dimen/active_game_btn_answer2_margin_right"
             android:text="99"
             android:textSize="30sp" />
 
         <Button
             android:id="@+id/btnAnswer3"
-            android:layout_width="120dp"
+            android:layout_width="@dimen/active_game_btn_answer3_width"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
+			android:layout_marginRight="@dimen/active_game_btn_answer3_margin_right"
             android:text="101"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+			 />
 
         <Button
             android:id="@+id/btnAnswer4"
-            android:layout_width="120dp"
+            android:layout_width="@dimen/active_game_btn_answer4_width"
             android:layout_height="wrap_content"
             android:text="9801"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+			 />
     </LinearLayout>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -124,7 +133,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:textStyle="bold"
-        android:textColor="#ff02be0e" />
+        android:textColor="@color/game_color_positive"
+		 />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -136,5 +146,6 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:textStyle="bold"
-        android:textColor="#ffbe0002" />
+        android:textColor="@color/game_color_negative"
+		 />
 </RelativeLayout>

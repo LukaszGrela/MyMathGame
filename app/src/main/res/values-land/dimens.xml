@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- active_game -->
+    <dimen name="active_game_title_bottom_margin">10dp</dimen>
+    <dimen name="active_game_arguments_layout_bottom_margin">0dp</dimen>
+    <dimen name="active_game_operation_margin_left">20dp</dimen>
+    <dimen name="active_game_operation_margin_right">20dp</dimen>
+    <dimen name="active_game_equals_margin_left">20dp</dimen>
+    <dimen name="active_game_equals_margin_right">20dp</dimen>
+    <dimen name="active_game_equals_margin_top">-20dp</dimen>
+    <dimen name="active_game_outer_layout_margin_top">0dp</dimen>
+    <dimen name="active_game_btn_answer1_width">120dp</dimen>
+    <dimen name="active_game_btn_answer1_margin_right">10dp</dimen>
+    <dimen name="active_game_btn_answer2_width">120dp</dimen>
+    <dimen name="active_game_btn_answer2_margin_right">10dp</dimen>
+    <dimen name="active_game_btn_answer3_width">120dp</dimen>
+    <dimen name="active_game_btn_answer3_margin_top">0dp</dimen>
+    <dimen name="active_game_btn_answer3_margin_right">10dp</dimen>
+    <dimen name="active_game_btn_answer4_width">120dp</dimen>
+    <dimen name="active_game_btn_answer4_margin_top">0dp</dimen>
+
+</resources>
